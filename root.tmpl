@@ -1,0 +1,59 @@
+{{ define "root" }}
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/assets/css/app.css">
+	</head>
+	<body>
+		{{ range $key, $value := .Locales }}
+			<a class="loc{{ if eq $key $.Selected.Locale }} selected{{ end }}" href="/?locale={{ $key }}">{{ $key }}</a>
+		{{ end }}
+
+		<br/>
+		<div>Time:{{ .Time }}</div>
+		<div>Locale:{{ .Selected.Locale }}</div>
+	
+		<p>Dates</p>
+		<div>Short:{{ .Selected.FmtDateShort .Time }}</div>
+		<div>Short:{{ .Selected.FmtDateMedium .Time }}</div>
+		<div>Short:{{ .Selected.FmtDateLong .Time }}</div>
+		<div>Short:{{ .Selected.FmtDateFull .Time }}</div>
+
+		<p>Times</p>
+		<div>Short:{{ .Selected.FmtTimeShort .Time }}</div>
+		<div>Short:{{ .Selected.FmtTimeMedium .Time }}</div>
+		<div>Short:{{ .Selected.FmtTimeLong .Time }}</div>
+		<div>Short:{{ .Selected.FmtTimeFull .Time }}</div>
+
+		<p>Months Narrow</p>
+		<div>{{ .Selected.MonthsNarrow }}</div>
+
+		<p>Months Abbreviated</p>
+		<div>{{ .Selected.MonthsAbbreviated }}</div>
+
+		<p>Months Wide</p>
+		<div>{{ .Selected.MonthsWide }}</div>
+
+		<p>Weekdays Narrow</p>
+		<div>{{ .Selected.WeekdaysNarrow }}</div>
+
+		<p>Weekdays Abbreviated</p>
+		<div>{{ .Selected.WeekdaysAbbreviated }}</div>
+
+		<p>Weekdays Wide</p>
+		<div>{{ .Selected.WeekdaysWide }}</div>
+
+		<p>Plurals Cardinal</p>
+		<div>{{ .Selected.PluralsCardinal }}</div>
+
+		<p>Plurals Ordinal</p>
+		<div>{{ .Selected.PluralsOrdinal }}</div>
+
+		<p>Plurals Range</p>
+		<div>{{ .Selected.PluralsRange }}</div>
+
+		{{ jquery }}
+  		{{ livereload }}
+  		<script src="/assets/js/locale.js"></script>
+	</body>
+</html>
+{{ end }}
