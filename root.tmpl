@@ -4,8 +4,8 @@
 		<link type="text/css" rel="stylesheet" href="/assets/css/app.css">
 	</head>
 	<body>
-		{{ range $key, $value := .Locales }}
-			<a class="loc{{ if eq $key $.Selected.Locale }} selected{{ end }}" href="/?locale={{ $key }}">{{ $key }}</a>
+		{{ range $idx, $loc := .Locales }}
+			<a class="loc{{ if eq $loc.Locale $.Selected.Locale }} selected{{ end }}" href="/?locale={{ $loc.Locale }}">{{ $loc.Locale }}</a>
 		{{ end }}
 
 		<br/>

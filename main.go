@@ -13,6 +13,7 @@ import (
 	"github.com/go-playground/pure"
 	mw "github.com/go-playground/pure/examples/middleware/logging-recovery"
 	"github.com/go-playground/pure/middleware"
+	"github.com/go-playground/universal-translator"
 )
 
 const (
@@ -23,17 +24,20 @@ const (
 )
 
 var (
-	prod      bool
-	tpls      *template.Template
-	localeMap = map[string]locales.Translator{
-		"en": en.New(),
-		"fr": fr.New(),
+	prod        bool
+	tpls        *template.Template
+	uni         *ut.UniversalTranslator
+	localeArray = []locales.Translator{
+		en.New(),
+		fr.New(),
 	}
 )
 
 func main() {
 
 	var err error
+
+	uni = ut.New(localeArray[0], localeArray...)
 
 	err = lr()
 	if err != nil {
@@ -58,32 +62,22 @@ func main() {
 
 func root(w http.ResponseWriter, r *http.Request) {
 
-	var ok bool
-	var loc locales.Translator
+	var found bool
+	var loc ut.Translator
 
 	l := r.URL.Query().Get("locale")
 
-	loc, ok = localeMap[l]
-	if !ok {
-		languages := pure.AcceptedLanguages(r)
-
-		for i := 0; i < len(languages); i++ {
-			if loc, ok = localeMap[languages[i]]; ok {
-				break
-			}
-		}
-
-		if len(l) == 0 {
-			loc = localeMap[defaultlocale]
-		}
+	loc, found = uni.GetTranslator(l)
+	if !found && len(l) > 0 {
+		loc, _ = uni.FindTranslator(pure.AcceptedLanguages(r)...)
 	}
 
 	s := struct {
-		Locales  map[string]locales.Translator
-		Selected locales.Translator
+		Locales  []locales.Translator
+		Selected ut.Translator
 		Time     time.Time
 	}{
-		Locales:  localeMap,
+		Locales:  localeArray,
 		Selected: loc,
 		Time:     time.Now().UTC(),
 	}
