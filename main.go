@@ -72,14 +72,22 @@ func root(w http.ResponseWriter, r *http.Request) {
 		loc, _ = uni.FindTranslator(pure.AcceptedLanguages(r)...)
 	}
 
+	num := 1987654321.51
+
 	s := struct {
-		Locales  []locales.Translator
-		Selected ut.Translator
-		Time     time.Time
+		Locales        []locales.Translator
+		Selected       ut.Translator
+		Time           time.Time
+		Number         float64
+		NegativeNumber float64
+		Percent        float64
 	}{
-		Locales:  localeArray,
-		Selected: loc,
-		Time:     time.Now().UTC(),
+		Locales:        localeArray,
+		Selected:       loc,
+		Time:           time.Now().UTC(),
+		Number:         num,
+		NegativeNumber: num * -1,
+		Percent:        45.67,
 	}
 
 	err := tpls.ExecuteTemplate(w, "root", s)

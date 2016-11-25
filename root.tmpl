@@ -10,19 +10,30 @@
 
 		<br/>
 		<div>Time:{{ .Time }}</div>
+		<div>Number:{{ .Number }}</div>
+		<div>Negative:{{ .NegativeNumber }}</div>
+		<div>Percent:{{ .Percent }}</div>
 		<div>Locale:{{ .Selected.Locale }}</div>
 	
+		<p>FmtNumber</p>
+		<div>Positive:{{ .Selected.FmtNumber .Number 2 }}</div>
+		<div>Negative:{{ .Selected.FmtNumber .NegativeNumber 2 }}</div>
+
+		<p>FmtPercent</p>
+		<div>Positive:{{ .Selected.FmtPercent .Percent 2 }}</div>
+		<div>Negative:{{ .Selected.FmtPercent .Percent 2 }}</div>
+
 		<p>Dates</p>
 		<div>Short:{{ .Selected.FmtDateShort .Time }}</div>
-		<div>Short:{{ .Selected.FmtDateMedium .Time }}</div>
-		<div>Short:{{ .Selected.FmtDateLong .Time }}</div>
-		<div>Short:{{ .Selected.FmtDateFull .Time }}</div>
+		<div>Medium:{{ .Selected.FmtDateMedium .Time }}</div>
+		<div>Long:{{ .Selected.FmtDateLong .Time }}</div>
+		<div>Full:{{ .Selected.FmtDateFull .Time }}</div>
 
 		<p>Times</p>
 		<div>Short:{{ .Selected.FmtTimeShort .Time }}</div>
-		<div>Short:{{ .Selected.FmtTimeMedium .Time }}</div>
-		<div>Short:{{ .Selected.FmtTimeLong .Time }}</div>
-		<div>Short:{{ .Selected.FmtTimeFull .Time }}</div>
+		<div>Medium:{{ .Selected.FmtTimeMedium .Time }}</div>
+		<div>Long:{{ .Selected.FmtTimeLong .Time }}</div>
+		<div>Full:{{ .Selected.FmtTimeFull .Time }}</div>
 
 		<p>Months Narrow</p>
 		<div>{{ .Selected.MonthsNarrow }}</div>
