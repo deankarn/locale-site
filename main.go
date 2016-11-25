@@ -2,7 +2,7 @@ package main
 
 import (
 	"html/template"
-	"log"
+
 	"net/http"
 	"time"
 
@@ -10,6 +10,8 @@ import (
 	"github.com/go-playground/locales"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/fr"
+	"github.com/go-playground/log"
+	"github.com/go-playground/log/handlers/console"
 	"github.com/go-playground/pure"
 	mw "github.com/go-playground/pure/examples/middleware/logging-recovery"
 	"github.com/go-playground/pure/middleware"
@@ -32,6 +34,14 @@ var (
 		fr.New(),
 	}
 )
+
+func init() {
+
+	cLog := console.New()
+	cLog.RedirectSTDLogOutput(true)
+
+	log.RegisterHandler(cLog, log.AllLevels...)
+}
 
 func main() {
 
@@ -75,24 +85,26 @@ func root(w http.ResponseWriter, r *http.Request) {
 	num := 1987654321.51
 
 	s := struct {
-		Locales        []locales.Translator
-		Selected       ut.Translator
-		Time           time.Time
-		Number         float64
-		NegativeNumber float64
-		Percent        float64
+		Locales           []locales.Translator
+		Selected          ut.Translator
+		TimeSectionHeader string
+		Time              time.Time
+		Number            float64
+		NegativeNumber    float64
+		Percent           float64
 	}{
-		Locales:        localeArray,
-		Selected:       loc,
-		Time:           time.Now().UTC(),
-		Number:         num,
-		NegativeNumber: num * -1,
-		Percent:        45.67,
+		Locales:           localeArray,
+		Selected:          loc,
+		TimeSectionHeader: "",
+		Time:              time.Now().UTC(),
+		Number:            num,
+		NegativeNumber:    num * -1,
+		Percent:           45.67,
 	}
 
 	err := tpls.ExecuteTemplate(w, "root", s)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 }
 
