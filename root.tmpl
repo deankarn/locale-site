@@ -47,11 +47,34 @@
 		<div>{{ .Selected.T "AbbreviatedTrans" }}: {{ .Selected.WeekdaysAbbreviated }}</div>
 		<div>{{ .Selected.T "WideTrans" }}: {{ .Selected.WeekdaysWide }}</div>
 
-
 		<p>{{ .Selected.T "PluralsSectionTrans" }}</p>
 		<div>{{ .Selected.T "CardinalTrans" }}: {{ .Selected.PluralsCardinal }}</div>
 		<div>{{ .Selected.T "OrdinalTrans" }}: {{ .Selected.PluralsOrdinal }}</div>
 		<div>{{ .Selected.T "RangeTrans" }}: {{ .Selected.PluralsRange }}</div>
+
+		<p>{{ .Selected.T "NativeCurrencySectionTrans" }}</p>
+		{{ range $idx, $cur := .NativeCurrencies }}
+			<div>{{ $.Selected.T "PositiveTrans" }}: {{ $.Selected.FmtCurrency $.Number 2 $cur }}</div>
+			<div>{{ $.Selected.T "NegativeTrans" }}: {{ $.Selected.FmtCurrency $.NegativeNumber 2 $cur }}</div>
+		{{ end }}
+
+		<p>{{ .Selected.T "OtherCurrencySectionTrans" }}</p>
+		{{ range $idx, $cur := .OtherCurrencies }}
+			<div>{{ $.Selected.T "PositiveTrans" }}: {{ $.Selected.FmtCurrency $.Number 2 $cur }}</div>
+			<div>{{ $.Selected.T "NegativeTrans" }}: {{ $.Selected.FmtCurrency $.NegativeNumber 2 $cur }}</div>
+		{{ end }}
+
+		<p>{{ .Selected.T "NativeCurrencyAccountingSectionTrans" }}</p>
+		{{ range $idx, $cur := .NativeCurrencies }}
+			<div>{{ $.Selected.T "PositiveTrans" }}: {{ $.Selected.FmtAccounting $.Number 2 $cur }}</div>
+			<div>{{ $.Selected.T "NegativeTrans" }}: {{ $.Selected.FmtAccounting $.NegativeNumber 2 $cur }}</div>
+		{{ end }}
+
+		<p>{{ .Selected.T "OtherCurrencyAccountingSectionTrans" }}</p>
+		{{ range $idx, $cur := .OtherCurrencies }}
+			<div>{{ $.Selected.T "PositiveTrans" }}: {{ $.Selected.FmtAccounting $.Number 2 $cur }}</div>
+			<div>{{ $.Selected.T "NegativeTrans" }}: {{ $.Selected.FmtAccounting $.NegativeNumber 2 $cur }}</div>
+		{{ end }}
 
 		{{ jquery }}
   		{{ livereload }}

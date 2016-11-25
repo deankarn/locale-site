@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-playground/livereload"
 	"github.com/go-playground/locales"
+	"github.com/go-playground/locales/currency"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/fr"
 	"github.com/go-playground/log"
@@ -29,64 +30,89 @@ var (
 	prod        bool
 	tpls        *template.Template
 	uni         *ut.UniversalTranslator
+	currencies  = make([]currency.Type, 296)
 	localeArray = []locales.Translator{
 		en.New(),
 		fr.New(),
 	}
-	localeMapInfo = map[string]map[string]string{
+	nativeCurrencies = map[string][]currency.Type{
 		"en": {
-			"MainTextTrans":        "Please take a look at the l10n rules for locales you are familiar with and please indicated if each is correct or provide a correction:",
-			"LocaleTrans":          "Locale",
-			"TimeTrans":            "Time",
-			"TimeSectionTrans":     "Times",
-			"NumberTrans":          "Number",
-			"NegativeNumberTrans":  "Negative Number",
-			"NumberSectionTrans":   "Number Formatting",
-			"PercentTrans":         "Percent Number",
-			"PercentSectionTrans":  "Percentages",
-			"DateSectionTrans":     "Dates",
-			"MonthsSectionTrans":   "Months",
-			"WeekdaysSectionTrans": "Weekdays",
-			"PluralsSectionTrans":  "Plural Rules",
-			"PositiveTrans":        "Positive",
-			"NegativeTrans":        "Negative",
-			"ShortTrans":           "Short",
-			"MediumTrans":          "Medium",
-			"LongTrans":            "Long",
-			"FullTrans":            "Full",
-			"NarrowTrans":          "Narrow",
-			"AbbreviatedTrans":     "Abbreviated",
-			"WideTrans":            "Wide",
-			"CardinalTrans":        "Cardinal",
-			"OrdinalTrans":         "Ordinal",
-			"RangeTrans":           "Range",
+			currency.USD,
 		},
 		"fr": {
-			"MainTextTrans":        "Veuillez prendre connaissance des règles l10n pour les lieux que vous connaissez et indiquer si chacune est correcte ou apporter une correction:",
-			"LocaleTrans":          "Lieu",
-			"TimeTrans":            "Temps",
-			"TimeSectionTrans":     "Fois",
-			"NumberTrans":          "Nombre",
-			"NegativeNumberTrans":  "Nombre négatif",
-			"NumberSectionTrans":   "Formatage des numéros",
-			"PercentTrans":         "Nombre de pourcentages",
-			"PercentSectionTrans":  "Pourcentages",
-			"DateSectionTrans":     "Rendez-vous",
-			"MonthsSectionTrans":   "Mois",
-			"WeekdaysSectionTrans": "Jours de la semaine",
-			"PluralsSectionTrans":  "Règles plurielles",
-			"PositiveTrans":        "Positif",
-			"NegativeTrans":        "Négatif",
-			"ShortTrans":           "Court",
-			"MediumTrans":          "Moyen",
-			"LongTrans":            "Longue",
-			"FullTrans":            "Plein",
-			"NarrowTrans":          "Étroit",
-			"AbbreviatedTrans":     "Abrégé",
-			"WideTrans":            "Large",
-			"CardinalTrans":        "Cardinal",
-			"OrdinalTrans":         "Ordinal",
-			"RangeTrans":           "Gamme",
+			currency.EUR,
+		},
+	}
+	otherCurrencies = map[string][]currency.Type{
+		"en": {
+			currency.EUR,
+		},
+		"fr": {
+			currency.USD,
+		},
+	}
+	localeMapInfo = map[string]map[string]string{
+		"en": {
+			"MainTextTrans":                        "Please take a look at the l10n rules for locales you are familiar with and please indicated if each is correct or provide a correction:",
+			"LocaleTrans":                          "Locale",
+			"TimeTrans":                            "Time",
+			"TimeSectionTrans":                     "Times",
+			"NumberTrans":                          "Number",
+			"NegativeNumberTrans":                  "Negative Number",
+			"NumberSectionTrans":                   "Number Formatting",
+			"PercentTrans":                         "Percent Number",
+			"PercentSectionTrans":                  "Percentages",
+			"DateSectionTrans":                     "Dates",
+			"MonthsSectionTrans":                   "Months",
+			"WeekdaysSectionTrans":                 "Weekdays",
+			"PluralsSectionTrans":                  "Plural Rules",
+			"NativeCurrencySectionTrans":           "Native Currencies",
+			"OtherCurrencySectionTrans":            "Other Currencies",
+			"NativeCurrencyAccountingSectionTrans": "Native Currency Accounting",
+			"OtherCurrencyAccountingSectionTrans":  "Other Currency Accounting",
+			"PositiveTrans":                        "Positive",
+			"NegativeTrans":                        "Negative",
+			"ShortTrans":                           "Short",
+			"MediumTrans":                          "Medium",
+			"LongTrans":                            "Long",
+			"FullTrans":                            "Full",
+			"NarrowTrans":                          "Narrow",
+			"AbbreviatedTrans":                     "Abbreviated",
+			"WideTrans":                            "Wide",
+			"CardinalTrans":                        "Cardinal",
+			"OrdinalTrans":                         "Ordinal",
+			"RangeTrans":                           "Range",
+		},
+		"fr": {
+			"MainTextTrans":                        "Veuillez prendre connaissance des règles l10n pour les lieux que vous connaissez et indiquer si chacune est correcte ou apporter une correction:",
+			"LocaleTrans":                          "Lieu",
+			"TimeTrans":                            "Temps",
+			"TimeSectionTrans":                     "Fois",
+			"NumberTrans":                          "Nombre",
+			"NegativeNumberTrans":                  "Nombre négatif",
+			"NumberSectionTrans":                   "Formatage des numéros",
+			"PercentTrans":                         "Nombre de pourcentages",
+			"PercentSectionTrans":                  "Pourcentages",
+			"DateSectionTrans":                     "Rendez-vous",
+			"MonthsSectionTrans":                   "Mois",
+			"WeekdaysSectionTrans":                 "Jours de la semaine",
+			"PluralsSectionTrans":                  "Règles plurielles",
+			"NativeCurrencySectionTrans":           "Monnaies autochtones",
+			"OtherCurrencySectionTrans":            "Autres monnaies",
+			"NativeCurrencyAccountingSectionTrans": "Comptabilité en monnaie native",
+			"OtherCurrencyAccountingSectionTrans":  "Autres Comptabilisation des devises",
+			"PositiveTrans":                        "Positif",
+			"NegativeTrans":                        "Négatif",
+			"ShortTrans":                           "Court",
+			"MediumTrans":                          "Moyen",
+			"LongTrans":                            "Longue",
+			"FullTrans":                            "Plein",
+			"NarrowTrans":                          "Étroit",
+			"AbbreviatedTrans":                     "Abrégé",
+			"WideTrans":                            "Large",
+			"CardinalTrans":                        "Cardinal",
+			"OrdinalTrans":                         "Ordinal",
+			"RangeTrans":                           "Gamme",
 		},
 	}
 )
@@ -103,12 +129,17 @@ func main() {
 
 	var err error
 
+	for i := 0; i < 295; i++ {
+		currencies[i] = currency.Type(i)
+	}
+
 	var defaultLocale locales.Translator
 
 	for _, l := range localeArray {
 
 		if l.Locale() == "en" {
 			defaultLocale = l
+			break
 		}
 	}
 
@@ -151,21 +182,23 @@ func root(w http.ResponseWriter, r *http.Request) {
 	num := 1987654321.51
 
 	s := struct {
-		Locales  []locales.Translator
-		Selected ut.Translator
-		// Info           *localeInfo
-		Time           time.Time
-		Number         float64
-		NegativeNumber float64
-		Percent        float64
+		Locales          []locales.Translator
+		Selected         ut.Translator
+		Time             time.Time
+		Number           float64
+		NegativeNumber   float64
+		Percent          float64
+		NativeCurrencies []currency.Type
+		OtherCurrencies  []currency.Type
 	}{
-		Locales:  localeArray,
-		Selected: loc,
-		// Info:           localeMapInfo[loc.Locale()],
-		Time:           time.Now().UTC(),
-		Number:         num,
-		NegativeNumber: num * -1,
-		Percent:        45.67,
+		Locales:          localeArray,
+		Selected:         loc,
+		Time:             time.Now().UTC(),
+		Number:           num,
+		NegativeNumber:   num * -1,
+		Percent:          45.67,
+		NativeCurrencies: nativeCurrencies[loc.Locale()],
+		OtherCurrencies:  otherCurrencies[loc.Locale()],
 	}
 
 	err := tpls.ExecuteTemplate(w, "root", s)
@@ -208,21 +241,27 @@ func setupTranslations() {
 
 func initTemplates() (*template.Template, error) {
 
-	funcMap := template.FuncMap{
-		"jquery": func() template.HTML {
-			if prod {
-				return template.HTML(productionJQuery)
-			}
+	var jqFn, lrFn func() template.HTML
 
-			return template.HTML(developmentJQuery)
-		},
-		"livereload": func() template.HTML {
-			if !prod {
-				return template.HTML(livereloadScript)
-			}
-
+	if prod {
+		jqFn = func() template.HTML {
+			return template.HTML(productionJQuery)
+		}
+		lrFn = func() template.HTML {
 			return template.HTML("")
-		},
+		}
+	} else {
+		jqFn = func() template.HTML {
+			return template.HTML(developmentJQuery)
+		}
+		lrFn = func() template.HTML {
+			return template.HTML(livereloadScript)
+		}
+	}
+
+	funcMap := template.FuncMap{
+		"jquery":     jqFn,
+		"livereload": lrFn,
 	}
 
 	templates, err := template.New("").Funcs(funcMap).ParseGlob("./*tmpl")
