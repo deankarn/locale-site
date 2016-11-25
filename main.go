@@ -33,6 +33,62 @@ var (
 		en.New(),
 		fr.New(),
 	}
+	localeMapInfo = map[string]map[string]string{
+		"en": {
+			"MainTextTrans":        "Please take a look at the l10n rules for locales you are familiar with and please indicated if each is correct or provide a correction:",
+			"LocaleTrans":          "Locale",
+			"TimeTrans":            "Time",
+			"TimeSectionTrans":     "Times",
+			"NumberTrans":          "Number",
+			"NegativeNumberTrans":  "Negative Number",
+			"NumberSectionTrans":   "Number Formatting",
+			"PercentTrans":         "Percent Number",
+			"PercentSectionTrans":  "Percentages",
+			"DateSectionTrans":     "Dates",
+			"MonthsSectionTrans":   "Months",
+			"WeekdaysSectionTrans": "Weekdays",
+			"PluralsSectionTrans":  "Plural Rules",
+			"PositiveTrans":        "Positive",
+			"NegativeTrans":        "Negative",
+			"ShortTrans":           "Short",
+			"MediumTrans":          "Medium",
+			"LongTrans":            "Long",
+			"FullTrans":            "Full",
+			"NarrowTrans":          "Narrow",
+			"AbbreviatedTrans":     "Abbreviated",
+			"WideTrans":            "Wide",
+			"CardinalTrans":        "Cardinal",
+			"OrdinalTrans":         "Ordinal",
+			"RangeTrans":           "Range",
+		},
+		"fr": {
+			"MainTextTrans":        "Veuillez prendre connaissance des règles l10n pour les lieux que vous connaissez et indiquer si chacune est correcte ou apporter une correction:",
+			"LocaleTrans":          "Lieu",
+			"TimeTrans":            "Temps",
+			"TimeSectionTrans":     "Fois",
+			"NumberTrans":          "Nombre",
+			"NegativeNumberTrans":  "Nombre négatif",
+			"NumberSectionTrans":   "Formatage des numéros",
+			"PercentTrans":         "Nombre de pourcentages",
+			"PercentSectionTrans":  "Pourcentages",
+			"DateSectionTrans":     "Rendez-vous",
+			"MonthsSectionTrans":   "Mois",
+			"WeekdaysSectionTrans": "Jours de la semaine",
+			"PluralsSectionTrans":  "Règles plurielles",
+			"PositiveTrans":        "Positif",
+			"NegativeTrans":        "Négatif",
+			"ShortTrans":           "Court",
+			"MediumTrans":          "Moyen",
+			"LongTrans":            "Longue",
+			"FullTrans":            "Plein",
+			"NarrowTrans":          "Étroit",
+			"AbbreviatedTrans":     "Abrégé",
+			"WideTrans":            "Large",
+			"CardinalTrans":        "Cardinal",
+			"OrdinalTrans":         "Ordinal",
+			"RangeTrans":           "Gamme",
+		},
+	}
 )
 
 func init() {
@@ -47,7 +103,17 @@ func main() {
 
 	var err error
 
-	uni = ut.New(localeArray[0], localeArray...)
+	var defaultLocale locales.Translator
+
+	for _, l := range localeArray {
+
+		if l.Locale() == "en" {
+			defaultLocale = l
+		}
+	}
+
+	uni = ut.New(defaultLocale, localeArray...)
+	setupTranslations()
 
 	err = lr()
 	if err != nil {
@@ -85,26 +151,58 @@ func root(w http.ResponseWriter, r *http.Request) {
 	num := 1987654321.51
 
 	s := struct {
-		Locales           []locales.Translator
-		Selected          ut.Translator
-		TimeSectionHeader string
-		Time              time.Time
-		Number            float64
-		NegativeNumber    float64
-		Percent           float64
+		Locales  []locales.Translator
+		Selected ut.Translator
+		// Info           *localeInfo
+		Time           time.Time
+		Number         float64
+		NegativeNumber float64
+		Percent        float64
 	}{
-		Locales:           localeArray,
-		Selected:          loc,
-		TimeSectionHeader: "",
-		Time:              time.Now().UTC(),
-		Number:            num,
-		NegativeNumber:    num * -1,
-		Percent:           45.67,
+		Locales:  localeArray,
+		Selected: loc,
+		// Info:           localeMapInfo[loc.Locale()],
+		Time:           time.Now().UTC(),
+		Number:         num,
+		NegativeNumber: num * -1,
+		Percent:        45.67,
 	}
 
 	err := tpls.ExecuteTemplate(w, "root", s)
 	if err != nil {
 		log.Error(err)
+	}
+}
+
+func setupTranslations() {
+
+	var found bool
+	var loc ut.Translator
+	var err error
+
+	for l, trans := range localeMapInfo {
+
+		loc, found = uni.GetTranslator(l)
+		if !found {
+			log.WithFields(log.F("locale", l)).Error("Translator Not Found")
+			continue
+		}
+
+		for k, v := range trans {
+			err = loc.Add(k, v, false)
+			if err != nil {
+				log.WithFields(
+					log.F("key", k),
+					log.F("text", v),
+					log.F("locale", l),
+				).Error("Adding Translation")
+			}
+		}
+
+		err = loc.VerifyTranslations()
+		if err != nil {
+			log.WithFields(log.F("error", err)).Error("Missing Translations")
+		}
 	}
 }
 

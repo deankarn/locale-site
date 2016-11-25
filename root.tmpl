@@ -4,63 +4,54 @@
 		<link type="text/css" rel="stylesheet" href="/assets/css/app.css">
 	</head>
 	<body>
+
+		<h3>{{ .Selected.T "MainTextTrans" }}</h3>
 		{{ range $idx, $loc := .Locales }}
 			<a class="loc{{ if eq $loc.Locale $.Selected.Locale }} selected{{ end }}" href="/?locale={{ $loc.Locale }}">{{ $loc.Locale }}</a>
 		{{ end }}
 
 		<br/>
-		<div>Time:{{ .Time }}</div>
-		<div>Number:{{ .Number }}</div>
-		<div>Negative:{{ .NegativeNumber }}</div>
-		<div>Percent:{{ .Percent }}</div>
-		<div>Locale:{{ .Selected.Locale }}</div>
+		<div>{{ .Selected.T "TimeTrans" }}:{{ .Time }}</div>
+		<div>{{ .Selected.T "NumberTrans" }}:{{ .Number }}</div>
+		<div>{{ .Selected.T "NegativeNumberTrans" }}:{{ .NegativeNumber }}</div>
+		<div>{{ .Selected.T "PercentTrans" }}:{{ .Percent }}</div>
+		<div>{{ .Selected.T "LocaleTrans" }}:{{ .Selected.Locale }}</div>
 	
-		<p>FmtNumber</p>
-		<div>Positive:{{ .Selected.FmtNumber .Number 2 }}</div>
-		<div>Negative:{{ .Selected.FmtNumber .NegativeNumber 2 }}</div>
+		<p>{{ .Selected.T "NumberSectionTrans" }}</p>
+		<div>{{ .Selected.T "PositiveTrans" }}:{{ .Selected.FmtNumber .Number 2 }}</div>
+		<div>{{ .Selected.T "NegativeTrans" }}:{{ .Selected.FmtNumber .NegativeNumber 2 }}</div>
 
-		<p>FmtPercent</p>
-		<div>Positive:{{ .Selected.FmtPercent .Percent 2 }}</div>
-		<div>Negative:{{ .Selected.FmtPercent .Percent 2 }}</div>
+		<p>{{ .Selected.T "PercentSectionTrans" }}</p>
+		<div>{{ .Selected.T "PositiveTrans" }}:{{ .Selected.FmtPercent .Percent 2 }}</div>
+		<div>{{ .Selected.T "NegativeTrans" }}:{{ .Selected.FmtPercent .Percent 2 }}</div>
 
-		<p>Dates</p>
-		<div>Short:{{ .Selected.FmtDateShort .Time }}</div>
-		<div>Medium:{{ .Selected.FmtDateMedium .Time }}</div>
-		<div>Long:{{ .Selected.FmtDateLong .Time }}</div>
-		<div>Full:{{ .Selected.FmtDateFull .Time }}</div>
+		<p>{{ .Selected.T "DateSectionTrans" }}</p>
+		<div>{{ .Selected.T "ShortTrans" }}:{{ .Selected.FmtDateShort .Time }}</div>
+		<div>{{ .Selected.T "MediumTrans" }}:{{ .Selected.FmtDateMedium .Time }}</div>
+		<div>{{ .Selected.T "LongTrans" }}:{{ .Selected.FmtDateLong .Time }}</div>
+		<div>{{ .Selected.T "FullTrans" }}:{{ .Selected.FmtDateFull .Time }}</div>
 
-		<p>Times</p>
-		<div>Short:{{ .Selected.FmtTimeShort .Time }}</div>
-		<div>Medium:{{ .Selected.FmtTimeMedium .Time }}</div>
-		<div>Long:{{ .Selected.FmtTimeLong .Time }}</div>
-		<div>Full:{{ .Selected.FmtTimeFull .Time }}</div>
+		<p>{{ .Selected.T "TimeSectionTrans" }}</p>
+		<div>{{ .Selected.T "ShortTrans" }}:{{ .Selected.FmtTimeShort .Time }}</div>
+		<div>{{ .Selected.T "MediumTrans" }}:{{ .Selected.FmtTimeMedium .Time }}</div>
+		<div>{{ .Selected.T "LongTrans" }}:{{ .Selected.FmtTimeLong .Time }}</div>
+		<div>{{ .Selected.T "FullTrans" }}:{{ .Selected.FmtTimeFull .Time }}</div>
 
-		<p>Months Narrow</p>
-		<div>{{ .Selected.MonthsNarrow }}</div>
+		<p>{{ .Selected.T "MonthsSectionTrans" }}</p>
+		<div>{{ .Selected.T "NarrowTrans" }}: {{ .Selected.MonthsNarrow }}</div>
+		<div>{{ .Selected.T "AbbreviatedTrans" }}: {{ .Selected.MonthsAbbreviated }}</div>
+		<div>{{ .Selected.T "WideTrans" }}: {{ .Selected.MonthsWide }}</div>
 
-		<p>Months Abbreviated</p>
-		<div>{{ .Selected.MonthsAbbreviated }}</div>
+		<p>{{ .Selected.T "WeekdaysSectionTrans" }}</p>
+		<div>{{ .Selected.T "NarrowTrans" }}: {{ .Selected.WeekdaysNarrow }}</div>
+		<div>{{ .Selected.T "AbbreviatedTrans" }}: {{ .Selected.WeekdaysAbbreviated }}</div>
+		<div>{{ .Selected.T "WideTrans" }}: {{ .Selected.WeekdaysWide }}</div>
 
-		<p>Months Wide</p>
-		<div>{{ .Selected.MonthsWide }}</div>
 
-		<p>Weekdays Narrow</p>
-		<div>{{ .Selected.WeekdaysNarrow }}</div>
-
-		<p>Weekdays Abbreviated</p>
-		<div>{{ .Selected.WeekdaysAbbreviated }}</div>
-
-		<p>Weekdays Wide</p>
-		<div>{{ .Selected.WeekdaysWide }}</div>
-
-		<p>Plurals Cardinal</p>
-		<div>{{ .Selected.PluralsCardinal }}</div>
-
-		<p>Plurals Ordinal</p>
-		<div>{{ .Selected.PluralsOrdinal }}</div>
-
-		<p>Plurals Range</p>
-		<div>{{ .Selected.PluralsRange }}</div>
+		<p>{{ .Selected.T "PluralsSectionTrans" }}</p>
+		<div>{{ .Selected.T "CardinalTrans" }}: {{ .Selected.PluralsCardinal }}</div>
+		<div>{{ .Selected.T "OrdinalTrans" }}: {{ .Selected.PluralsOrdinal }}</div>
+		<div>{{ .Selected.T "RangeTrans" }}: {{ .Selected.PluralsRange }}</div>
 
 		{{ jquery }}
   		{{ livereload }}
